@@ -1,23 +1,45 @@
-import logo from './logo.svg';
 import './App.css';
+import React, { useState } from 'react';
 
 function App() {
+  const [inputText, setInputText] = useState("");
+  const [list, setList] = useState([]);
+
+  function updateInputTextState(event) {
+    setInputText(event.target.value);
+  }
+
+  function addItem(event) {
+    if(inputText) {
+      // add item
+      setList(oldList => {
+        return [...oldList, inputText];
+      });
+      // reset input text
+      setInputText("");
+    }
+  }
+
+  function deleteItem(index) {
+    setList(oldList => {
+      return oldList.slice(0, index).concat(oldList.slice(index+1));
+    });
+  }
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <input type="text" onChange={updateInputTextState} value={inputText}/>
+      <input type="button" onClick={addItem} value="Add Item" />
+      <div>
+        Result
+        <div className="List container">
+          <ul>
+            {list.map((element, index) => {
+              return <li key={index}> {element} <input type="button" value="Delete" onClick={() => {deleteItem(index)}}/> </li>
+            })}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
